@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador para o Natal - Relógio Digital com Trenó</title>
+  <style>
+    /* Estilos para a página */
+    body {
+      font-family: 'Courier New', Courier, monospace; /* Fonte digital */
+      background-image: url(Design\ sem\ nome\ \(9\).png);
+      background-size: cover;
+      color: #00ff00; /* Cor verde típica de um relógio digital */
+      text-align: center;
+      margin: 0;
+      height: 100vh; /* Ocupa toda a altura da tela */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Alinha verticalmente no centro */
+      align-items: center; /* Alinha horizontalmente no centro */
+      overflow: hidden; /* Impede rolagem */
+      position: relative; /* Necessário para que a Terra e o relógio fiquem sobre o fundo */
+    }
+
+    .container{
+      display: flex;
+      max-width: 1910px;
+      height: auto;
+      border-radius: 15px;
+      justify-items: center;
+      align-items: center;
+      background-color: #050505c4;
+    }
+
+    /* Título */
+    h1 {
+      font-size: 2.5em;
+      color: #fcfafa;
+      margin-bottom: 30px;
+    }
+
+    /* Estilo do relógio */
+    .relogio {
+      width: 700PX; /* Tamanho do relógio */
+      height: 700px; /* Tamanho do relógio */
+      background-image: url(a.gif);
+      background-size: cover;
+      border-radius: 50%; /* Tornar o formato redondo */
+      border: 10px solid #ffffff; /* Borda verde para o relógio */
+      position: relative; /* Para posicionar o contador no centro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Brilho verde */
+      margin-bottom: 30px; /* Espaço abaixo do relógio */
+    }
+
+    /* Estilo do contador dentro do relógio */
+    .contador {
+      font-size: 3em; /* Tamanho grande para os números */
+      font-weight: bold;
+      letter-spacing: 5px; /* Espaçamento entre os números */
+      color: #ffffff; /* Cor verde do contador */
+      z-index: 1; /* Garante que o contador fique acima do trenó */
+      position: absolute; /* Fixa o contador no centro */
+      text-align: center;
+    }
+
+    /* Imagem do trenó */
+    .treno {
+      width: 150px; /* Tamanho do trenó */
+      height: auto;
+      animation: girarTreno 10s linear infinite; /* Animação de rotação contínua */
+      transform-origin: 200px; /* Ponto de rotação ajustado para o círculo do relógio */
+    }
+
+    /* Animação para o movimento circular do trenó dentro do relógio */
+    @keyframes girarTreno {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg); /* Posição inicial */
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg); /* Uma volta completa dentro do relógio */
+      }
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 600px) {
+      .relogio {
+        width: 300px;
+        height: 300px;
+      }
+
+      .contador {
+        font-size: 2em;
+      }
+
+      .treno {
+        width: 60px;
+      }
+    }
+
+    /* Estilo da animação de "Feliz Natal!" */
+    .feliz-natal {
+      font-size: 3.5em;
+      font-weight: bold;
+      color: #d9534f;
+      opacity: 0; /* Inicialmente invisível */
+      transform: scale(0.5); /* Inicialmente menor */
+      transition: all 1s ease-in-out; /* Transição suave */
+      margin-top: 30px;
+      letter-spacing: 3px;
+    }
+
+    .feliz-natal.show {
+      opacity: 1; /* Torna visível */
+      transform: scale(1); /* Aumenta para o tamanho normal */
+    }
+
+    /* Confetes */
+    #confetes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Permite interagir com outros elementos em cima */
+      z-index: 10; /* Certifique-se de que os confetes fiquem acima do conteúdo */
+    }
+
+    .confete {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff0; /* Cor amarela dos confetes */
+      border-radius: 50%;
+      animation: cair 2s infinite ease-in-out; /* Animação de queda dos confetes */
+    }
+
+    /* Animação dos confetes */
+    @keyframes cair {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .relogio {
+        width: 300px;
+        height: 300px;
+      }
+
+      .contador {
+        font-size: 2em;
+      }
+
+      .feliz-natal {
+        font-size: 2.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><strong>Contagem Regressiva para o Natal!</strong></h1>
+
+    <!-- Contêiner para o relógio -->
+    <div class="relogio">
+      <!-- Imagem do trenó -->
+      <img id="treno" class="treno" src="a.png" alt="Trenó" />
+      <!-- Contador -->
+      <div id="contador" class="contador"></div>
+    </div>
+
+    <!-- Mensagem de "Feliz Natal!" -->
+    <div id="felizNatal" class="feliz-natal">Feliz Natal!</div>
+
+    <!-- Confetes -->
+    <div id="confetes"></div>
+    
+  </div>
+
+  <script>
+    // Função para calcular o tempo restante até o Natal
+    function contarTempoParaONatal() {
+      const hoje = new Date(); // Data de hoje
+      const natal = new Date(hoje.getFullYear(), 11, 25); // Data do Natal (25 de dezembro do ano atual)
+
+      // Se já passou o Natal deste ano, calcular para o próximo ano
+      if (hoje > natal) {
+        natal.setFullYear(hoje.getFullYear() + 1);
+      }
+
+      // Calcular a diferença em milissegundos
+      const diferenca = natal - hoje;
+
+      // Calcular os dias, horas, minutos e segundos restantes
+      const diasRestantes = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+      const horasRestantes = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutosRestantes = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+      const segundosRestantes = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+      return { diasRestantes, horasRestantes, minutosRestantes, segundosRestantes };
+    }
+
+    // Função para iniciar a contagem regressiva
+    function iniciarContagemRegressiva() {
+      const contadorElemento = document.getElementById("contador"); // Elemento onde a contagem será exibida
+      const felizNatalElemento = document.getElementById("felizNatal"); // Elemento da mensagem "Feliz Natal"
+      const confetesElemento = document.getElementById("confetes"); // Elemento para os confetes
+
+      // Inicializa a animação de "Feliz Natal" como invisível
+      felizNatalElemento.classList.remove("show");
+
+      // Função para criar confetes caindo
+      function gerarConfetes() {
+        const confete = document.createElement("div");
+        confete.classList.add("confete");
+
+        // Posicionamento aleatório
+        const posX = Math.random() * 100; // Posição horizontal aleatória
+        confete.style.left = `${posX}vw`; // 'vw' para torná-lo responsivo
+
+        // Adiciona o confete no contêiner
+        confetesElemento.appendChild(confete);
+
+        // Remove o confete após a animação
+        setTimeout(() => {
+          confetesElemento.removeChild(confete);
+        }, 2000); // O tempo de animação dos confetes
+      }
+
+      // Atualiza a contagem a cada segundo (1000 milissegundos)
+      const intervalo = setInterval(function() {
+        const { diasRestantes, horasRestantes, minutosRestantes, segundosRestantes } = contarTempoParaONatal();
+
+        // Atualiza o texto do contador com o formato de relógio digital
+        contadorElemento.innerText = `${diasRestantes}d ${horasRestantes}h ${minutosRestantes}m ${segundosRestantes}s`;
+
+        // Quando chegar ao Natal, pare a contagem e mostre a animação de Feliz Natal
+        if (diasRestantes <= 0 && horasRestantes <= 0 && minutosRestantes <= 0 && segundosRestantes <= 0) {
+          clearInterval(intervalo);
+          contadorElemento.innerText = ""; // Limpa o contador
+          felizNatalElemento.classList.add("show"); // Exibe a animação de "Feliz Natal!"
+
+          // Inicia a queda dos confetes
+          setInterval(gerarConfetes, 100); // Gera confetes a cada 100ms
+        }
+      }, 1000);
+    }
+
+    // Chama a função para iniciar a contagem regressiva
+    iniciarContagemRegressiva();
+  </script>
+</body>
+</html>
