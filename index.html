@@ -22,6 +22,13 @@
       position: relative; /* Necessário para que a Terra e o relógio fiquem sobre o fundo */
     }
 
+    .ancora {
+      width: 100%;
+      animation: girarTreno 10s linear infinite;
+      display: flex;
+      justify-content: end;
+    }
+
     .container{
       display: flex;
       max-width: 1910px;
@@ -71,16 +78,15 @@
       width: 150px; /* Tamanho do trenó */
       height: auto;
       animation: girarTreno 10s linear infinite; /* Animação de rotação contínua */
-      transform-origin: 200px; /* Ponto de rotação ajustado para o círculo do relógio */
     }
 
     /* Animação para o movimento circular do trenó dentro do relógio */
     @keyframes girarTreno {
       0% {
-        transform: translate(-50%, -50%) rotate(0deg); /* Posição inicial */
+        transform: rotate(0deg); /* Posição inicial */
       }
       100% {
-        transform: translate(-50%, -50%) rotate(360deg); /* Uma volta completa dentro do relógio */
+        transform: rotate(360deg); /* Uma volta completa dentro do relógio */
       }
     }
 
@@ -177,7 +183,7 @@
     <!-- Contêiner para o relógio -->
     <div class="relogio">
       <!-- Imagem do trenó -->
-      <img id="treno" class="treno" src="a.png" alt="Trenó" />
+      <div class="ancora"><img id="treno" class="treno" src="a.png" alt="Trenó" /></div>
       <!-- Contador -->
       <div id="contador" class="contador"></div>
     </div>
